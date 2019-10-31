@@ -37,7 +37,6 @@ type code struct {
 	Name    string
 	Code    string
 	Counter uint64
-	sync.Mutex
 }
 
 const (
@@ -47,6 +46,7 @@ const (
 var shutdown chan (interface{})
 var entries []entry
 var codes []*code
+var mtx sync.Mutex
 
 func main() {
 	shutdown = make(chan (interface{}))
@@ -66,6 +66,8 @@ func main() {
 	ui.Bind("start", func() {
 		log.Println("UI is ready")
 	})
+
+	ui.Bind("getCodes", getAllCodes)
 
 	// Create and bind Go object to the UI
 	c := &counter{}
@@ -139,7 +141,6 @@ func generateCodes(ui lorca.UI) {
 			for _, entry := range entries {
 				timer := time.Now()
 				counter := uint64(math.Floor(float64(timer.Unix()) / float64(30)))
-
 				// Generate and display codes
 				generatedCode, err := totp.GenerateCode(entry.Secret, timer)
 				if err != nil {
@@ -150,9 +151,6 @@ func generateCodes(ui lorca.UI) {
 					if codes[i].Name == entry.Name {
 						codes[i].Code = generatedCode
 						codes[i].Counter = counter
-
-						ui.Bind(codes[i].Name, codes[i].getCode)
-						ui.Eval(fmt.Sprintf("console.log(\"%v %v %d \");", entry.Name, codes[i].getCode(), counter))
 						codeFound = true
 						break
 					}
@@ -166,8 +164,14 @@ func generateCodes(ui lorca.UI) {
 	}
 }
 
-func (c *code) getCode() string {
-	c.Lock()
-	defer c.Unlock()
-	return c.Code
+
+func getAllCodes() [][]string {
+	mtx.Lock()
+	var resp [][]string
+	for i := range codes {
+		update := []string{codes[i].Name, codes[i].Code}
+		resp = append(resp,update)
+	}
+	mtx.Unlock()
+	return resp
 }
