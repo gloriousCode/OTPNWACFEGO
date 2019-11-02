@@ -9,6 +9,11 @@ Unlike OTPCMDGO, this will have the ability to add new entries from the applicat
 - Golang installed
 - Your 2FA secret codes
 
+## Current Features
+- GUI for viewing ONE 2FA OTP
+- A countdown timer for ONE 2FA OTP
+- A button to click copy
+
 ## Upcoming Features
 - GUI for viewing your 2FA OTPs
 - A countdown timer
@@ -16,6 +21,6 @@ Unlike OTPCMDGO, this will have the ability to add new entries from the applicat
 - Add new keys in-app
 - Delete existing keys in-app
 
-Built with:
-https://github.com/pquerna/otp
-https://github.com/zserge/lorca
+### Built with:
+- https://github.com/pquerna/otp
+- https://github.com/zserge/lorca
