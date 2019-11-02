@@ -1,6 +1,6 @@
 #!/bin/sh
 
-APP=lorca-example
+APP=OTPNWACFEGO
 APPDIR=${APP}_1.0.0
 
 mkdir -p $APPDIR/usr/bin
@@ -31,8 +31,8 @@ Version: 1.0-0
 Section: base
 Priority: optional
 Architecture: amd64
-Maintainer: Serge Zaitsev <zaitsev.serge@gmail.com>
-Description: Example for Lorca GUI toolkit
+Maintainer: GloriousCode <scott@gloriousedge.com>
+Description: OTP cross platform generator
 EOF
 
 dpkg-deb --build $APPDIR

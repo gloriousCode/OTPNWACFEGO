@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"net"
 	"net/http"
 	"os"
@@ -36,7 +35,7 @@ type entry struct {
 type code struct {
 	Name    string
 	Code    string
-	Counter uint64
+	Counter string
 }
 
 const (
@@ -47,20 +46,25 @@ var shutdown chan (interface{})
 var entries []entry
 var codes []*code
 var mtx sync.Mutex
+var timer *SecondsTimer
 
 func main() {
 	shutdown = make(chan (interface{}))
 	entries = readJSONFile(filePath)
-
+	height := len(entries) * 180
+	if height > 1280 {
+		height = 1280
+	}
 	args := []string{}
 	if runtime.GOOS == "linux" {
 		args = append(args, "--class=Lorca")
 	}
-	ui, err := lorca.New("", "", 480, 320, args...)
+	ui, err := lorca.New("", "", 560, height, args...)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer ui.Close()
+	timer = NewSecondsTimer(time.Second * 30)
 	go generateCodes(ui)
 	// A simple way to know when UI is ready (uses body.onload event in JS)
 	ui.Bind("start", func() {
@@ -138,25 +142,28 @@ func generateCodes(ui lorca.UI) {
 		case <-shutdown:
 			return
 		default:
-			for _, entry := range entries {
-				timer := time.Now()
-				counter := uint64(math.Floor(float64(timer.Unix()) / float64(30)))
-				// Generate and display codes
-				generatedCode, err := totp.GenerateCode(entry.Secret, timer)
+			for i := range entries {
+				generatedCode, err := totp.GenerateCode(entries[i].Secret, time.Now())
 				if err != nil {
 					panic(err)
 				}
 				var codeFound bool
-				for i := range codes {
-					if codes[i].Name == entry.Name {
-						codes[i].Code = generatedCode
-						codes[i].Counter = counter
+				timerReset := false
+				for j := range codes {
+					if codes[j].Name == entries[i].Name {
+						if codes[j].Code != "" && codes[j].Code != generatedCode && !timerReset {
+							// timer has elapsed! Now reset your timer
+							timer.Reset(time.Second * 30)
+							timerReset = true
+						}
+						codes[j].Code = generatedCode
+						codes[j].Counter = fmt.Sprintf("%ds", timer.TimeRemaining())
 						codeFound = true
 						break
 					}
 				}
 				if !codeFound {
-					codes = append(codes, &code{Name: entry.Name, Code: generatedCode, Counter: counter})
+					codes = append(codes, &code{Name: entries[i].Name, Code: generatedCode, Counter: fmt.Sprintf("%ds", timer.TimeRemaining())})
 				}
 			}
 			time.Sleep(time.Second)
@@ -164,14 +171,35 @@ func generateCodes(ui lorca.UI) {
 	}
 }
 
-
 func getAllCodes() [][]string {
 	mtx.Lock()
 	var resp [][]string
 	for i := range codes {
-		update := []string{codes[i].Name, codes[i].Code}
-		resp = append(resp,update)
+		update := []string{codes[i].Name, codes[i].Code, codes[i].Counter}
+		resp = append(resp, update)
 	}
 	mtx.Unlock()
 	return resp
+}
+
+type SecondsTimer struct {
+	timer *time.Timer
+	end   time.Time
+}
+
+func NewSecondsTimer(t time.Duration) *SecondsTimer {
+	return &SecondsTimer{time.NewTimer(t), time.Now().Add(t)}
+}
+
+func (s *SecondsTimer) Reset(t time.Duration) {
+	s.timer.Reset(t)
+	s.end = time.Now().Add(t)
+}
+
+func (s *SecondsTimer) Stop() {
+	s.timer.Stop()
+}
+
+func (s *SecondsTimer) TimeRemaining() time.Duration {
+	return s.end.Sub(time.Now()) / 1000000000
 }
