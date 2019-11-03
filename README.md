@@ -10,13 +10,11 @@ Unlike OTPCMDGO, this will have the ability to add new entries from the applicat
 - Your 2FA secret codes
 
 ## Current Features
-- GUI for viewing ONE 2FA OTP
-- A countdown timer for ONE 2FA OTP
+- GUI for viewing your 2FA OTPs
+- A countdown timer
 - A button to click copy
 
 ## Upcoming Features
-- GUI for viewing your 2FA OTPs
-- A countdown timer
 - Encryption of your secrets
 - Add new keys in-app
 - Delete existing keys in-app
