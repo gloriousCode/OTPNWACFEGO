@@ -51,7 +51,7 @@ var timer *SecondsTimer
 func main() {
 	shutdown = make(chan (interface{}))
 	entries = readJSONFile(filePath)
-	height := len(entries) * 180
+	height := len(entries) * 100
 	if height > 1280 {
 		height = 1280
 	}
@@ -59,7 +59,7 @@ func main() {
 	if runtime.GOOS == "linux" {
 		args = append(args, "--class=Lorca")
 	}
-	ui, err := lorca.New("", "", 560, height, args...)
+	ui, err := lorca.New("", "", 360, height, args...)
 	if err != nil {
 		log.Fatal(err)
 	}
