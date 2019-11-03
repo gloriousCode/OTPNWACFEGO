@@ -2,7 +2,7 @@
 ## One Time Password, Now With A Cool Front End in GO
 A OTP generator for Windows, MacOS and Linux so you don't have to get out your phone every two seconds in this 2FA world
 
-Unlike OTPCMDGO, this will have the ability to add new entries from the application.
+Unlike [OTPCMDGO](https://github.com/gloriousCode/OTPCMDGO), this will have the ability to add new entries from the application.
 
 Here's what it looks like right now:
 ![OTPNWACFEGO](https://i.imgur.com/KUYITRR.gif)
