@@ -4,7 +4,6 @@ A OTP generator for Windows, MacOS and Linux so you don't have to get out your p
 
 Unlike [OTPCMDGO](https://github.com/gloriousCode/OTPCMDGO), this will have the ability to add new entries from the application.
 
-Here's what it looks like right now:
 ![OTPNWACFEGO](https://i.imgur.com/KUYITRR.gif)
 
 ## Requirements
