@@ -5,7 +5,7 @@ A OTP generator for Windows, MacOS and Linux so you don't have to get out your p
 Unlike OTPCMDGO, this will have the ability to add new entries from the application.
 
 Here's what it looks like right now:
-![OTPNWACFEGO](https://i.imgur.com/J7NhqZp.gif)
+![OTPNWACFEGO](https://i.imgur.com/KUYITRR.gif)
 
 ## Requirements
 - Chrome installed
