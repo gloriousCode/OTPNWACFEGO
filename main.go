@@ -94,7 +94,6 @@ func main() {
 	// log.Println(). Also exceptions are printed in a similar manner.
 	ui.Eval(`
 		console.log("Hello, world!");
-		console.log('Multiple values:', [1, false, {"x":5}]);
 	`)
 
 	// Wait until the interrupt signal arrives or browser window is closed
