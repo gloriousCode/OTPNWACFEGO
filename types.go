@@ -3,6 +3,8 @@ package main
 import (
 	"sync"
 	"time"
+
+	"github.com/zserge/lorca"
 )
 
 const (
@@ -15,6 +17,9 @@ var codes []*code
 var mtx sync.Mutex
 var timer *countdownTimer
 var password string
+var ui lorca.UI
+var wg sync.WaitGroup
+var key string
 
 type entry struct {
 	Name   string `json:"name"`

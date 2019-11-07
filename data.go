@@ -16,7 +16,16 @@ func readJSONFile(file string) []entry {
 	if err != nil {
 		panic(err)
 	}
-
+	if config.ConfirmECS(dataJSON) {
+		wg.Add(1)
+		ui.Eval("promptForKey()")
+		wg.Wait()
+		json, err := decrypt(dataJSON, key)
+		if err != nil {
+			panic(err)
+		}
+		dataJSON = json
+	}
 	var data []entry
 	err = JSONDecode(dataJSON, &data)
 	if err != nil {
@@ -26,16 +35,16 @@ func readJSONFile(file string) []entry {
 	return data
 }
 
-func encrypt(key string) ([]byte, error) {
+func encrypt(encryptionKey string) ([]byte, error) {
 	data, err := JSONEncode(entries)
 	if err != nil {
 		return nil, err
 	}
-	return config.EncryptConfigFile(data, []byte(key))
+	return config.EncryptConfigFile(data, []byte(encryptionKey))
 }
 
-func decrypt(key string) ([]byte, error) {
-	return config.DecryptConfigFile([]byte(key), []byte(key))
+func decrypt(json []byte, encryptionKey string) ([]byte, error) {
+	return config.DecryptConfigFile(json, []byte(encryptionKey))
 }
 
 func JSONEncode(v interface{}) ([]byte, error) {

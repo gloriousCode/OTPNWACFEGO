@@ -17,7 +17,7 @@ import (
 
 func main() {
 	shutdown = make(chan (interface{}))
-	ui := setupLorca()
+	ui = setupLorca()
 	defer ui.Close()
 
 	timer = NewSecondsTimer(time.Second * 30)
@@ -41,6 +41,11 @@ func main() {
 	close(shutdown)
 }
 
+func setKey() {
+	key = ui.Eval("$\"#key\").val()").String()
+	wg.Done()
+}
+
 func setupLorca() lorca.UI {
 	entries = readJSONFile(filePath)
 	height := len(entries) * 100
@@ -61,6 +66,7 @@ func setupLorca() lorca.UI {
 		log.Println("UI is ready")
 	})
 	ui.Bind("getCodes", getAllCodes)
+	ui.Bind("setKey", setKey)
 
 	return ui
 }

@@ -9,26 +9,40 @@
 </head>
 
 <body>
+    <div>
+        <input id="key" />
+        <div id="key-btn" class="btn btn-decr">DECRYPT</div>
+    </div>
     <div class="the-thing"></div>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             var butts
-            setInterval(function () {
-                async () => {
+            setInterval(function() {
+                async() => {
                     await getCodes();
                 }
                 render();
             }, 1000);
 
             // We use async/await because Go functions are asynchronous
-            const render = async () => {
+            const render = async() => {
                 var codes = await getCodes();
                 var first = true
-                $.each(codes, function (index, value) {
+                $.each(codes, function(index, value) {
                     outputDivs(codes[index][0], codes[index][1], codes[index][2], first)
                     first = false
                 });
             };
+
+            function promptForKey() {
+
+            }
+
+            $("#key-btn").click(function() {
+                async() => {
+                    await setKey();
+                }
+            });
 
             function outputDivs(name, code, counter, first) {
                 var remainingClass = "remaining"
@@ -42,10 +56,10 @@
                 }
                 var html = `
                 <div class="counter-container">
-                    <h4 class="`+ remainingClass + `">`+ name + ` - ` + counter + `</h4>
+                    <h4 class="` + remainingClass + `">` + name + ` - ` + counter + `</h4>
                     <div class="btn-row">
-                        <input type="text" class="counter" value="`+ code + `" id="` + name + `">
-                        <div id="`+ name + `-btn" class="btn btn-decr">COPY</div>
+                        <input type="text" class="counter" value="` + code + `" id="` + name + `">
+                        <div id="` + name + `-btn" class="btn btn-decr">COPY</div>
                     </div>
                 </div>
                 `
@@ -55,7 +69,7 @@
                     $(".the-thing").append(html)
                 }
 
-                $("#" + name + "-btn").click(function () {
+                $("#" + name + "-btn").click(function() {
                     var copyText = document.getElementById(name);
                     copyText.select();
                     copyText.setSelectionRange(0, 99999); /*For mobile devices*/
