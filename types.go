@@ -20,6 +20,7 @@ var password string
 var ui lorca.UI
 var wg sync.WaitGroup
 var key string
+var isLoaded bool
 
 type entry struct {
 	Name   string `json:"name"`

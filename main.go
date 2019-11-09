@@ -41,9 +41,13 @@ func main() {
 	close(shutdown)
 }
 
-func setKey() {
-	key = ui.Eval("$\"#key\").val()").String()
-	wg.Done()
+func setPKey() {
+	key = ui.Eval("$(\"#key\").val()").String()
+	ui.Eval("alert(\"" + key + "\")")
+}
+
+func isConfigLoaded() bool {
+	return isLoaded
 }
 
 func setupLorca() lorca.UI {
@@ -66,7 +70,8 @@ func setupLorca() lorca.UI {
 		log.Println("UI is ready")
 	})
 	ui.Bind("getCodes", getAllCodes)
-	ui.Bind("setKey", setKey)
+	ui.Bind("setKey", setPKey)
+	ui.Bind("isConfigLoaded", isConfigLoaded)
 
 	return ui
 }

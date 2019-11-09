@@ -31,7 +31,7 @@ func readJSONFile(file string) []entry {
 	if err != nil {
 		panic(err)
 	}
-
+	isLoaded = true
 	return data
 }
 

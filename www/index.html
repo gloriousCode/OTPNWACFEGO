@@ -9,23 +9,36 @@
 </head>
 
 <body>
-    <div>
+    <div class="decrypt-prompt">
         <input id="key" />
         <div id="key-btn" class="btn btn-decr">DECRYPT</div>
     </div>
+
     <div class="the-thing"></div>
     <script>
         $(document).ready(function() {
             var butts
+            var isLoaded = false
             setInterval(function() {
-                async() => {
-                    await getCodes();
-                }
                 render();
             }, 1000);
 
+
+            document.querySelector('#key-btn').addEventListener('click', async() => {
+                setKey();
+            });
+
             // We use async/await because Go functions are asynchronous
             const render = async() => {
+                isLoaded = await isConfigLoaded();
+                if (!isLoaded) {
+                    $(".decrypt-prompt").show();
+                    $(".the-thing").hide();
+                    return
+                } else {
+                    $(".decrypt-prompt").hide();
+                    $(".the-thing").show();
+                }
                 var codes = await getCodes();
                 var first = true
                 $.each(codes, function(index, value) {
@@ -34,15 +47,7 @@
                 });
             };
 
-            function promptForKey() {
 
-            }
-
-            $("#key-btn").click(function() {
-                async() => {
-                    await setKey();
-                }
-            });
 
             function outputDivs(name, code, counter, first) {
                 var remainingClass = "remaining"

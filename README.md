@@ -23,7 +23,7 @@ Unlike [OTPCMDGO](https://github.com/gloriousCode/OTPCMDGO), this will have the 
 ## Current Features
 - GUI for viewing your 2FA OTPs
 - A countdown timer
-- A button to click copy
+- A convenient copy button
 
 ## Upcoming Features
 - Encryption of your secrets
@@ -36,3 +36,4 @@ This isn't looking to be a rock-solid secure application. If you are at all conc
 ### Built with:
 - https://github.com/pquerna/otp
 - https://github.com/zserge/lorca
+- https://github.com/thrasher-corp/gocryptotrader

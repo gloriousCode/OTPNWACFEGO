@@ -13,6 +13,10 @@ func generateCodes() {
 		case <-shutdown:
 			return
 		default:
+			if !isLoaded {
+				time.Sleep(time.Second)
+				continue
+			}
 			for i := range entries {
 				generatedCode, err := totp.GenerateCode(entries[i].Secret, time.Now())
 				if err != nil {
@@ -44,6 +48,10 @@ func generateCodes() {
 func getAllCodes() [][]string {
 	mtx.Lock()
 	var resp [][]string
+	if !isLoaded {
+		mtx.Unlock()
+		return resp
+	}
 	for i := range codes {
 		update := []string{codes[i].Name, codes[i].Code, codes[i].Counter}
 		resp = append(resp, update)
