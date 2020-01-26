@@ -12,35 +12,44 @@
 
 <body>
     <div class="decrypt-prompt">
-        <input id="key" />
-        <div id="key-btn" class="btn btn-decr">DECRYPT</div>
+        <input id="decrypt-key" />
+        <div id="decrypt-key-btn" class="btn btn-decr">DECRYPT</div>
+    </div>
+    <div class="encrypt-prompt">
+        Would you like to encrypt your data.json?
+        <input id="encrypt-key" />
+        <div id="encrypt-key-btn" class="btn btn-decr">ENCRYPT</div>
+        <div id="encrypt-no-btn" class="btn btn-decr">No thanks</div>
     </div>
 
-    <div class="the-thing"></div>
+    <div class="otp-codes"></div>
     <script>
         $(document).ready(function() {
-            var butts
             var isLoaded = false
             setInterval(function() {
                 render();
             }, 1000);
-
-
             document.querySelector('#key-btn').addEventListener('click', async() => {
                 setKey();
             });
-
             // We use async/await because Go functions are asynchronous
             const render = async() => {
                 isLoaded = await isConfigLoaded();
                 if (!isLoaded) {
                     $(".decrypt-prompt").show();
-                    $(".the-thing").hide();
+                    $(".otp-codes").hide();
                     return
                 } else {
                     $(".decrypt-prompt").hide();
-                    $(".the-thing").show();
+                    $(".otp-codes").show();
                 }
+                prompt = await shouldPromptEncrypt();
+                if (prompt) {
+                    $(".encrypt-prompt").show();
+                } else {
+                    $(".encrypt-prompt").hide();
+                }
+
                 var codes = await getCodes();
                 var first = true
                 $.each(codes, function(index, value) {
@@ -48,8 +57,6 @@
                     first = false
                 });
             };
-
-
 
             function outputDivs(name, code, counter, first) {
                 var remainingClass = "remaining"
@@ -71,9 +78,9 @@
                 </div>
                 `
                 if (first == true) {
-                    $(".the-thing").html(html)
+                    $(".otp-codes").html(html)
                 } else {
-                    $(".the-thing").append(html)
+                    $(".otp-codes").append(html)
                 }
 
                 $("#" + name + "-btn").click(function() {
@@ -83,7 +90,6 @@
                     document.execCommand("copy");
                 });
             }
-
             render();
         })
     </script>

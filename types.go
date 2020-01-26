@@ -12,7 +12,7 @@ const (
 )
 
 var shutdown chan (interface{})
-var entries []entry
+var cfg jsonData
 var codes []*code
 var mtx sync.Mutex
 var timer *countdownTimer
@@ -21,6 +21,11 @@ var ui lorca.UI
 var wg sync.WaitGroup
 var key string
 var isLoaded bool
+
+type jsonData struct {
+	PromptEncrypt bool `json:"prompt-encrypt"`
+	Codes []entry `json:"codes"`
+}
 
 type entry struct {
 	Name   string `json:"name"`

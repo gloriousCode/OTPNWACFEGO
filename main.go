@@ -50,9 +50,13 @@ func isConfigLoaded() bool {
 	return isLoaded
 }
 
+func shouldPromptEncrypt() bool {
+	return cfg.PromptEncrypt
+}
+
 func setupLorca() lorca.UI {
-	entries = readJSONFile(filePath)
-	height := len(entries) * 100
+	cfg = readJSONFile(filePath)
+	height := len(cfg.Codes) * 100
 	if height > 1280 {
 		height = 1280
 	}
@@ -72,6 +76,7 @@ func setupLorca() lorca.UI {
 	ui.Bind("getCodes", getAllCodes)
 	ui.Bind("setKey", setPKey)
 	ui.Bind("isConfigLoaded", isConfigLoaded)
+	ui.Bind("shouldPromptEncrypt", shouldPromptEncrypt)
 
 	return ui
 }

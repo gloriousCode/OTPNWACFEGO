@@ -11,7 +11,7 @@ import (
 )
 
 // readJSONFile reads a file and converts the JSON to an Entry type
-func readJSONFile(file string) []entry {
+func readJSONFile(file string) jsonData {
 	dataJSON, err := ioutil.ReadFile(file)
 	if err != nil {
 		panic(err)
@@ -26,7 +26,7 @@ func readJSONFile(file string) []entry {
 		}
 		dataJSON = json
 	}
-	var data []entry
+	var data jsonData
 	err = JSONDecode(dataJSON, &data)
 	if err != nil {
 		panic(err)
@@ -36,7 +36,7 @@ func readJSONFile(file string) []entry {
 }
 
 func encrypt(encryptionKey string) ([]byte, error) {
-	data, err := JSONEncode(entries)
+	data, err := JSONEncode(cfg)
 	if err != nil {
 		return nil, err
 	}
