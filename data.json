@@ -1,11 +1,29 @@
 {
-    "prompt-encrypt": true,
-    "codes":[
-        {"name":"These", "secret": "QBGN657AHIQ34QIA"},
-        {"name":"Arent", "secret": "QBSN6575HIQ34QIA"},
-        {"name":"Real", "secret": "QBGN657BHIQ34QIA"},
-        {"name":"2FA", "secret": "QBGN657DHIQ34QIA"},
-        {"name":"Secret", "secret": "QBSN657XHIQ34QIA"},
-        {"name":"Codes", "secret": "QBGN657QHIQ34QIA"}
+    "prompt-encrypt": false,
+    "codes": [
+        {
+            "name": "These",
+            "secret": "QBGN657AHIQ34QIA"
+        },
+        {
+            "name": "Arent",
+            "secret": "QBSN6575HIQ34QIA"
+        },
+        {
+            "name": "Real",
+            "secret": "QBGN657BHIQ34QIA"
+        },
+        {
+            "name": "2FA",
+            "secret": "QBGN657DHIQ34QIA"
+        },
+        {
+            "name": "Secret",
+            "secret": "QBSN657XHIQ34QIA"
+        },
+        {
+            "name": "Codes",
+            "secret": "QBGN657QHIQ34QIA"
+        }
     ]
 }

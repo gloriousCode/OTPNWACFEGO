@@ -33,12 +33,13 @@ func main() {
 	ui.Load(fmt.Sprintf("http://%s", ln.Addr()))
 	// Wait until the interrupt signal arrives or browser window is closed
 	sigc := make(chan os.Signal)
-	signal.Notify(sigc, os.Interrupt)
+	signal.Notify(sigc, os.Interrupt
 	select {
 	case <-sigc:
 	case <-ui.Done():
 	}
 	close(shutdown)
+	saveConfig(filePath)
 }
 
 func setPKey() {
@@ -54,8 +55,10 @@ func shouldPromptEncrypt() bool {
 	return cfg.PromptEncrypt
 }
 
-func dontEncrypt() {
+func dontEncrypt() bool{
 	cfg.PromptEncrypt = false
+	saveConfig(filePath)
+	return cfg.PromptEncrypt
 }
 
 

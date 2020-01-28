@@ -2,12 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
-	"io/ioutil"
-	"reflect"
-	"strings"
-
 	"github.com/thrasher-corp/gocryptotrader/config"
+	"io/ioutil"
+	"os"
 )
 
 // readJSONFile reads a file and converts the JSON to an Entry type
@@ -27,7 +24,7 @@ func readJSONFile(file string) jsonData {
 		dataJSON = json
 	}
 	var data jsonData
-	err = JSONDecode(dataJSON, &data)
+	err = json.Unmarshal(dataJSON, &data)
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +33,7 @@ func readJSONFile(file string) jsonData {
 }
 
 func encrypt(encryptionKey string) ([]byte, error) {
-	data, err := JSONEncode(cfg)
+	data, err := json.Marshal(cfg)
 	if err != nil {
 		return nil, err
 	}
@@ -47,14 +44,32 @@ func decrypt(json []byte, encryptionKey string) ([]byte, error) {
 	return config.DecryptConfigFile(json, []byte(encryptionKey))
 }
 
-func JSONEncode(v interface{}) ([]byte, error) {
-	return json.Marshal(v)
-}
-
-// JSONDecode decodes JSON data into a structure
-func JSONDecode(data []byte, to interface{}) error {
-	if !strings.Contains(reflect.ValueOf(to).Type().String(), "*") {
-		return errors.New("json decode error - memory address not supplied")
+func saveConfig(file string) {
+	var data []byte
+	var err error
+	if cfg.PromptEncrypt && key != "" {
+		data,err = encrypt(key)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		data, err = json.MarshalIndent(cfg, "", "    ")
+		if err != nil {
+			panic(err)
+		}
 	}
-	return json.Unmarshal(data, to)
+	fi, err := os.Open(file)
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		if err := fi.Close(); err != nil {
+			panic(err)
+		}
+	}()
+
+	err = ioutil.WriteFile(file, data, 0644)
+	if err != nil {
+		panic(err)
+	}
 }

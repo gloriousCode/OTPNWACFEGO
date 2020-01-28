@@ -33,7 +33,7 @@
             });
             document.querySelector('#encrypt-no-btn').addEventListener('click', async() => {
                 $(".encrypt-prompt").hide();
-                await dontEncrypt();
+                console.log(await dontEncrypt());
             });
             // We use async/await because Go functions are asynchronous
             const render = async() => {
