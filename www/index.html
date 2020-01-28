@@ -26,11 +26,14 @@
     <script>
         $(document).ready(function() {
             var isLoaded = false
-            setInterval(function() {
-                render();
-            }, 1000);
-            document.querySelector('#key-btn').addEventListener('click', async() => {
+            var prompt = false
+
+            document.querySelector('#decrypt-key-btn').addEventListener('click', async() => {
                 setKey();
+            });
+            document.querySelector('#encrypt-no-btn').addEventListener('click', async() => {
+                $(".encrypt-prompt").hide();
+                await dontEncrypt();
             });
             // We use async/await because Go functions are asynchronous
             const render = async() => {
@@ -72,7 +75,7 @@
                 <div class="counter-container">
                     <h4 class="` + remainingClass + `">` + name + ` - ` + counter + `</h4>
                     <div class="btn-row">
-                        <input type="text" class="counter" value="` + code + `" id="` + name + `"> 
+                        <input type="text" class="counter" value="` + code + `" id="` + name + `">
                         <div id="` + name + `-btn" class="btn btn-decr">COPY</div>
                     </div>
                 </div>
@@ -91,6 +94,9 @@
                 });
             }
             render();
+            setInterval(function() {
+                render();
+            }, 1000);
         })
     </script>
 </body>
