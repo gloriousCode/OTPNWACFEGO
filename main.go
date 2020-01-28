@@ -33,7 +33,7 @@ func main() {
 	ui.Load(fmt.Sprintf("http://%s", ln.Addr()))
 	// Wait until the interrupt signal arrives or browser window is closed
 	sigc := make(chan os.Signal)
-	signal.Notify(sigc, os.Interrupt
+	signal.Notify(sigc, os.Interrupt)
 	select {
 	case <-sigc:
 	case <-ui.Done():
