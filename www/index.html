@@ -11,6 +11,26 @@
 </head>
 
 <body>
+<div class="navbar-fixed">
+<nav>
+    <div class="nav-wrapper">
+        <a href="#!" class="brand-logo">Logo</a>
+        <a href="#" data-target="mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <li><a id="menu-btn-encrypt" href="#">Encrypt Config</a></li>
+            <li><a id="menu-btn-decrypt" href="#">Decrypt Config</a></li>
+            <li><a id="menu-btn-new" href="#">New 2FA</a></li>
+        </ul>
+    </div>
+</nav>
+</div>
+
+<ul class="sidenav" id="mobile">
+    <li><a id="mob-menu-btn-encrypt" href="#">Encrypt Config</a></li>
+    <li><a id="mob-menu-btn-decrypt" href="#">Decrypt Config</a></li>
+    <li><a id="mob-menu-btn-new" href="#">New 2FA</a></li>
+</ul>
+
     <div class="decrypt-prompt">
         <input id="decrypt-key" />
         <div id="decrypt-key-btn" class="btn btn-decr">DECRYPT</div>
@@ -24,45 +44,46 @@
 
     <div class="otp-codes"></div>
     <script>
-        $(document).ready(function() {
-            var isLoaded = false
-            var prompt = false
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems, options);
+        });
+        document.querySelector('#decrypt-key-btn').addEventListener('click', async() => {
+            setKey();
+        });
+        document.querySelector('#encrypt-no-btn').addEventListener('click', async() => {
+            $(".encrypt-prompt").hide();
+            console.log(await dontEncrypt());
+        });
 
-            document.querySelector('#decrypt-key-btn').addEventListener('click', async() => {
-                setKey();
-            });
-            document.querySelector('#encrypt-no-btn').addEventListener('click', async() => {
-                $(".encrypt-prompt").hide();
-                console.log(await dontEncrypt());
-            });
+        $(document).ready(function() {
+            var isLoaded = false;
             // We use async/await because Go functions are asynchronous
             const render = async() => {
                 isLoaded = await isConfigLoaded();
                 if (!isLoaded) {
-                    $(".decrypt-prompt").show();
-                    $(".otp-codes").hide();
-                    return
-                } else {
-                    $(".decrypt-prompt").hide();
-                    $(".otp-codes").show();
-                }
-                prompt = await shouldPromptEncrypt();
-                if (prompt) {
-                    $(".encrypt-prompt").show();
-                } else {
                     $(".encrypt-prompt").hide();
+                    $(".decrypt-prompt").show();
                 }
-
                 var codes = await getCodes();
-                var first = true
+                $(".encrypt-prompt").hide();
+                var first = true;
                 $.each(codes, function(index, value) {
                     outputDivs(codes[index][0], codes[index][1], codes[index][2], first)
                     first = false
                 });
             };
 
+            $('.sidenav').sidenav();
+            $("#mob-menu-btn-encrypt").click(function() {
+                $(".encrypt-prompt").show();
+            });
+            $("#menu-btn-encrypt").click(function() {
+                $(".encrypt-prompt").show();
+            });
+
             function outputDivs(name, code, counter, first) {
-                var remainingClass = "remaining"
+                var remainingClass = "remaining";
                 if (counter == "5s" ||
                     counter == "4s" ||
                     counter == "3s" ||
@@ -71,7 +92,7 @@
                     counter == "0s") {
                     remainingClass = "urgent"
                 }
-                var html = `
+                let html = `
                 <div class="counter-container">
                     <h4 class="` + remainingClass + `">` + name + ` - ` + counter + `</h4>
                     <div class="btn-row">
@@ -79,11 +100,11 @@
                         <div id="` + name + `-btn" class="btn btn-decr">COPY</div>
                     </div>
                 </div>
-                `
+                `;
                 if (first == true) {
-                    $(".otp-codes").html(html)
+                    $(".otp-codes").html(html);
                 } else {
-                    $(".otp-codes").append(html)
+                    $(".otp-codes").append(html);
                 }
 
                 $("#" + name + "-btn").click(function() {
@@ -96,7 +117,7 @@
             render();
             setInterval(function() {
                 render();
-            }, 1000);
+            }, 500);
         })
     </script>
 </body>
